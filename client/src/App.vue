@@ -15,11 +15,13 @@
     @startRecording="startRecording"
     @stopRecording="stopRecording"
   />
+  <CombineRecordings :combineAvailable="firstAudio && secondAudio ? true : false"/>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
 import AudioRecorder from './components/AudioRecorder.vue';
+import CombineRecordings from './components/CombineRecordings.vue';
 import './assets/style.css';
 
 const audioStream = ref(null);
