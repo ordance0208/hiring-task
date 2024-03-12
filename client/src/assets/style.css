@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
+.audio-recorder {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+p {
+  margin: 0
+}
