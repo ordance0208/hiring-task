@@ -5,6 +5,13 @@
 .audio-recorder {
   margin-top: 16px;
   display: flex;
+  gap: 4px;
+}
+
+.combine-recordings {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
   gap: 8px;
 }
 
