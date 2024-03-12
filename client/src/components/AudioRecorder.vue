@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
+import { computed } from 'vue';
 
 const emit = defineEmits(['startRecording', 'stopRecording']);
 
