@@ -23,10 +23,15 @@ const props = defineProps({
   secondAudio: Object,
 });
 
+const loading = ref(false);
 const combinedAudio = ref(null);
 const audioElement = ref(null);
 const combineAudioDisabled = computed(
-  () => !props.firstAudio || !props.secondAudio || combinedAudio.value
+  () =>
+    !props.firstAudio ||
+    !props.secondAudio ||
+    combinedAudio.value ||
+    loading.value
 );
 
 const handlePlayCombinedAudio = () => {
@@ -41,9 +46,15 @@ const handleCombineAudio = async () => {
 
   formData.append('audio1', props.firstAudio);
   formData.append('audio2', props.secondAudio);
-  const data = await combineAudio(formData);
+  try {
+    loading.value = true;
+    const data = await combineAudio(formData);
 
-  const url = URL.createObjectURL(data);
-  combinedAudio.value = url;
+    const url = URL.createObjectURL(data);
+    combinedAudio.value = url;
+  } catch (err) {
+  } finally {
+    loading.value = false;
+  }
 };
 </script>
