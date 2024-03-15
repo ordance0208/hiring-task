@@ -15,6 +15,11 @@
   gap: 8px;
 }
 
+.secondary-button {
+  background: none;
+  border: none;
+}
+
 p {
   margin: 0
 }
