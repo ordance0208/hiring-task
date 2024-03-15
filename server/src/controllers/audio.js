@@ -11,6 +11,10 @@ const diskStorage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '../../uploads/');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath);
+    }
     cb(null, `${file.originalname}.${file.mimetype.split('/')[1]}`);
   },
 });
