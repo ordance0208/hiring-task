@@ -1,7 +1,7 @@
 <template>
   <div class="combine-recordings">
     <div>
-      <button @click="handleCombineAudio" :disabled="!combineAudioDisabled">
+      <button @click="handleCombineAudio" :disabled="combineAudioDisabled">
         Combine
       </button>
     </div>
@@ -25,7 +25,9 @@ const props = defineProps({
 
 const combinedAudio = ref(null);
 const audioElement = ref(null);
-const combineAudioDisabled = computed(() => props.firstAudio && props.secondAudio);
+const combineAudioDisabled = computed(
+  () => !props.firstAudio || !props.secondAudio || combinedAudio.value
+);
 
 const handlePlayCombinedAudio = () => {
   if (audioElement.value.paused) {
