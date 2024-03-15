@@ -1,12 +1,12 @@
 <template>
   <div class="audio-recorder">
-    <button :disabled="disabled" @click="startRecording">
+    <button :disabled="startRecordingDisabled" @click="handleStartRecording">
       Record Audio {{ id }}
     </button>
     <button
       class="secondary-button"
-      :disabled="disabledStopButton"
-      @click="stopRecording"
+      :disabled="stopRecordingDisabled"
+      @click="handleStopRecording"
     >
       Stop recording
     </button>
@@ -18,31 +18,30 @@
 import { computed } from 'vue';
 
 const emit = defineEmits(['startRecording', 'stopRecording']);
-
 const props = defineProps({
   id: Number,
   recordingId: Number,
   audio: Object,
 });
 
-const disabled = computed(
+const startRecordingDisabled = computed(
   () =>
     props.recordingId === props.id ||
     (props.recordingId !== null && props.recordingId !== props.id) ||
     props.audio
 );
 
-const disabledStopButton = computed(
+const stopRecordingDisabled = computed(
   () =>
     props.recordingId === null ||
     (props.recordingId !== null && props.recordingId !== props.id)
 );
 
-const startRecording = () => {
+const handleStartRecording = () => {
   emit('startRecording', props.id);
 };
 
-const stopRecording = () => {
+const handleStopRecording = () => {
   emit('stopRecording');
 };
 </script>
