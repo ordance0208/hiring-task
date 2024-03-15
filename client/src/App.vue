@@ -15,7 +15,7 @@
     @startRecording="startRecording"
     @stopRecording="stopRecording"
   />
-  <CombineRecordings :combineAvailable="firstAudio && secondAudio ? true : false"/>
+  <CombineRecordings :firstAudio="firstAudio" :secondAudio="secondAudio" />
 </template>
 
 <script setup>
@@ -42,7 +42,7 @@ const stopRecording = () => {
   recorder.value.stop();
 };
 
-onMounted(async () => {
+const getUserMedia = async () => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     audioStream.value = stream;
@@ -51,37 +51,27 @@ onMounted(async () => {
       recordedAudio.value.push(e.data);
     };
     recorder.value.onstop = saveFile;
-    console.log('User granted audio stream access!');
   } catch (err) {
     console.log(
       `An error occurred while trying to access user media: ${err.message}`
     );
   }
-});
+};
 
-const saveFile = () => {  
+const saveFile = () => {
   const file = new File(recordedAudio.value, `recording${recordingId.value}`, {
     type: 'audio/mp3; codecs=opus',
   });
 
-  if(recordingId.value === 1) {
+  if (recordingId.value === 1) {
     firstAudio.value = file;
   } else {
     secondAudio.value = file;
   }
-  
+
   recordingId.value = null;
-
-  // const anchor = document.createElement('a');
-
-  // const url = URL.createObjectURL(file);
-
-  // anchor.href = url;
-  // anchor.download = file.name;
-  // document.body.appendChild(anchor);
-  // anchor.click();
-  // document.body.removeChild(anchor);
-
-  // recordedAudio.value = [];
+  recordedAudio.value = [];
 };
+
+onMounted(getUserMedia);
 </script>
