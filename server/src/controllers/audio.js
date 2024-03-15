@@ -23,29 +23,34 @@ export const upload = multer({
 });
 
 export const combineAudio = async (req, res) => {
-  const audioStream1 = fs.createReadStream(
-    path.join(__dirname, '../../uploads/recording1.mp3')
-  );
-  const audioStream2 = fs.createReadStream(
-    path.join(__dirname, '../../uploads/recording2.mp3')
-  );
+  try {
+    const audioPath1 = path.join(__dirname, '../../uploads/recording1.mp3');
+    const audioPath2 = path.join(__dirname, '../../uploads/recording2.mp3');
+    const outputPath = path.join(__dirname, '../../uploads/output.mp3');
 
-  const outputStream = fs.createWriteStream(
-    path.join(__dirname, '../../uploads/output.mp3')
-  );
+    const audioStream1 = fs.createReadStream(audioPath1);
+    const audioStream2 = fs.createReadStream(audioPath2);
+    const outputStream = fs.createWriteStream(outputPath);
 
-  audioStream1.on('data', (chunk) => {
-    outputStream.write(chunk);
-  });
-
-  audioStream1.on('end', () => {
-    audioStream2.on('data', (chunk) => {
+    audioStream1.on('data', (chunk) => {
       outputStream.write(chunk);
     });
-  });
 
-  audioStream2.on('end', () => {
-    outputStream.close();
-    res.sendFile(path.join(__dirname, '../../uploads/output.mp3'));
-  });
+    audioStream1.on('end', () => {
+      audioStream2.on('data', (chunk) => {
+        outputStream.write(chunk);
+      });
+    });
+
+    audioStream2.on('end', () => {
+      outputStream.close();
+      res.sendFile(outputPath, () => {
+        fs.unlinkSync(audioPath1);
+        fs.unlinkSync(audioPath2);
+        fs.unlinkSync(outputPath);
+      });
+    });
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
 };
